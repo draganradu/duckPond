@@ -28,7 +28,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <nav className="bg-sky-950 text-white p-5 items-center justify-end">
+        <nav className="bg-sky-950 text-white p-5 h-24 flex items-center justify-between">
           <Link href="/">Duck</Link>
           <ul>
             <li>
