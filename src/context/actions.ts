@@ -4,10 +4,10 @@ import { auth } from "@/firebase/server";
 import { cookies } from "next/headers";
 
 export const removeToken = async () => {
-    const cookieStore = await cookies();
-    cookieStore.delete("firebaseAuthToken");
-    cookieStore.delete("firebaseAuthRefreshToken");
-}
+  const cookieStore = await cookies();
+  cookieStore.delete("firebaseAuthToken");
+  cookieStore.delete("firebaseAuthRefreshToken");
+};
 
 export const setToken = async ({
   token,
@@ -27,7 +27,9 @@ export const setToken = async ({
       process.env.ADMIN_EMAIL === userRecord.email &&
       !userRecord.customClaims?.admin
     ) {
-      auth.setCustomUserClaims(verifiedToken.uid, { admin: true });
+      auth.setCustomUserClaims(verifiedToken.uid, {
+        admin: true,
+      });
     }
 
     const cookieStore = await cookies();
@@ -40,6 +42,7 @@ export const setToken = async ({
       secure: process.env.NODE_ENV === "production",
     });
   } catch (e) {
+    console.log("yerror");
     console.log(e);
   }
 };

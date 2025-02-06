@@ -1,7 +1,7 @@
 import { Firestore, getFirestore } from "firebase-admin/firestore";
 import { getApps, ServiceAccount } from "firebase-admin/app";
 import admin from "firebase-admin";
-import { Auth, getAuth } from "firebase/auth";
+import { Auth, getAuth } from "firebase-admin/auth";
 
 const serviceAccount = {
   type: "service_account",
@@ -18,10 +18,8 @@ const serviceAccount = {
   universe_domain: "googleapis.com",
 };
 
-// Initialize Firebase
 let firestore: Firestore;
 let auth: Auth;
-
 const currentApps = getApps();
 
 if (!currentApps.length) {
@@ -37,3 +35,18 @@ if (!currentApps.length) {
 }
 
 export { firestore, auth };
+
+export const getTotalPages = async (
+  firestoreQuery: FirebaseFirestore.Query<
+    FirebaseFirestore.DocumentData,
+    FirebaseFirestore.DocumentData
+  >,
+  pageSize: number
+) => {
+  const queryCount = firestoreQuery.count();
+  const countSnapshot = await queryCount.get();
+  const countData = countSnapshot.data();
+  const total = countData.count;
+  const totalPages = Math.ceil(total / pageSize);
+  return totalPages;
+};

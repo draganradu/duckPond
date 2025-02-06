@@ -10,11 +10,12 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
-import { Avatar } from "@radix-ui/react-avatar";
+import { Avatar, AvatarFallback } from "./ui/avatar";
 import Image from "next/image";
-import { AvatarFallback } from "./ui/avatar";
+import { useRouter } from "next/navigation";
 
 export default function AuthButtons() {
+  const router = useRouter();
   const auth = useAuth();
 
   return (
@@ -23,52 +24,69 @@ export default function AuthButtons() {
         <DropdownMenu>
           <DropdownMenuTrigger>
             <Avatar>
-              {auth?.currentUser?.photoURL ? (
+              {!!auth.currentUser.photoURL && (
                 <Image
-                  src={auth?.currentUser?.photoURL}
-                  alt={`${auth?.currentUser?.displayName} avatar`}
-                  width={40}
-                  height={40}
+                  src={auth.currentUser.photoURL}
+                  alt={`${auth.currentUser.displayName} avatar`}
+                  width={70}
+                  height={70}
                 />
-              ):
-              (<AvatarFallback>
-                {(auth?.currentUser?.displayName ||
-                  auth?.currentUser?.email)?.[0]?.toUpperCase()}
-              </AvatarFallback>)}
-              
+              )}
+              <AvatarFallback className="text-sky-950">
+                {(auth.currentUser.displayName || auth.currentUser.email)?.[0]}
+              </AvatarFallback>
             </Avatar>
           </DropdownMenuTrigger>
           <DropdownMenuContent>
             <DropdownMenuLabel>
-            <div>{auth.currentUser.displayName}</div>
-            <div>{auth.currentUser.email}</div>
-          </DropdownMenuLabel>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem asChild>
-            <Link href="/my-account">My Account</Link>
-          </DropdownMenuItem>
-          <DropdownMenuItem asChild>
-            <Link href="/admin-dashboard">Admin Dashboard</Link>
-          </DropdownMenuItem>
-          <DropdownMenuItem asChild>
-            <Link href="/my-favorite">My Favorite</Link>
-          </DropdownMenuItem>
-          <DropdownMenuItem onClick={ async () => await auth?.logout()}>
-            Logout
-          </DropdownMenuItem>
+              <div>{auth.currentUser.displayName}</div>
+              <div className="font-normal text-xs">
+                {auth.currentUser.email}
+              </div>
+            </DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem asChild>
+              <Link href="/account">My Account</Link>
+            </DropdownMenuItem>
+            {!!auth.customClaims?.admin && (
+              <DropdownMenuItem asChild>
+                <Link href="/admin-dashboard">Admin Dashboard</Link>
+              </DropdownMenuItem>
+            )}
+            <DropdownMenuItem asChild>
+              <Link href="/admin-dashboard">Admin Dashboard</Link>
+            </DropdownMenuItem>
+            {!auth.customClaims?.admin && (
+              <DropdownMenuItem asChild>
+                <Link href="/account/my-favourites">My Favourites</Link>
+              </DropdownMenuItem>
+            )}
+            <DropdownMenuItem
+              onClick={async () => {
+                await auth.logout();
+                router.refresh();
+              }}
+            >
+              Logout
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       )}
       {!auth?.currentUser && (
-        <div>
-          <ul>
-            <li>
-              <Link href="/login">login</Link>
-            </li>
-            <li>
-              <Link href="/register">Register</Link>
-            </li>
-          </ul>
+        <div className="flex gap-2 items-center">
+          <Link
+            href="/login"
+            className="uppercase tracking-widest hover:underline"
+          >
+            Login
+          </Link>
+          <div className="h-8 w-[1px] bg-white/50" />
+          <Link
+            href="/register"
+            className="uppercase tracking-widest hover:underline"
+          >
+            Signup
+          </Link>
         </div>
       )}
     </div>
