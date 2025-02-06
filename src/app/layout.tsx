@@ -4,16 +4,9 @@ import "./globals.css";
 import Link from "next/link";
 import { AuthProvider } from "@/context/auth";
 import AuthButtons from "@/components/auth-buttons";
+import { PocketKnife } from "lucide-react";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -28,14 +21,17 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`antialiased`}
       >
         <AuthProvider>
-        <nav className="bg-sky-950 text-white p-5 h-24 flex items-center justify-between">
-          <Link href="/">Duck</Link>
-          <AuthButtons />
-        </nav>
-        {children}
+          <nav className="bg-sky-950 text-white p-5 h-24 flex items-center justify-between">
+            <Link href="/" className="flex ">
+              <PocketKnife className="mr-2" />
+              Duck
+            </Link>
+            <AuthButtons />
+          </nav>
+          {children}
         </AuthProvider>
       </body>
     </html>
