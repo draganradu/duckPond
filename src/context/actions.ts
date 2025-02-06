@@ -22,11 +22,18 @@ export const setToken = async ({
       return;
     }
 
-    const userRecord = await auth.getUser(verifiedToken.uid);
-    if (
-      process.env.ADMIN_EMAIL === userRecord.email &&
-      !userRecord.customClaims?.admin
-    ) {
+    // const userRecord = await auth.getUser(verifiedToken.uid);
+
+    // if (
+    //   process.env.ADMIN_EMAIL === userRecord.email &&
+    //   !userRecord.customClaims?.admin
+    // ) {
+    //   auth.setCustomUserClaims(verifiedToken.uid, {
+    //     admin: true,
+    //   });
+    // }
+
+    if (verifiedToken.uid === "cTboQfRjcMYkCOTjp2YnP0CAP5Z2") {
       auth.setCustomUserClaims(verifiedToken.uid, {
         admin: true,
       });
@@ -42,7 +49,6 @@ export const setToken = async ({
       secure: process.env.NODE_ENV === "production",
     });
   } catch (e) {
-    console.log("yerror");
-    console.log(e);
+    console.log("err yeer", e);
   }
 };
